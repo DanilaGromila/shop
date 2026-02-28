@@ -4,6 +4,11 @@ public class FeedbackCreateDto {
     private String text;
     private Integer stars;
 
+    public FeedbackCreateDto(String text, Integer stars) {
+        this.text = text;
+        this.stars = stars;
+    }
+
     public String getText() {
         return text;
     }

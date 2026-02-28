@@ -74,6 +74,26 @@ public class ItemRepository {
         }
     }
 
+    public void updateRating(Long id, Item item, Double rating) {
+        Transaction tx = null;
+
+        try (Session session = sessionFactory.openSession()) {
+            tx = session.beginTransaction();
+
+            if (item != null) {
+                item.setRating(rating);
+                session.update(item);
+            } else {
+                throw new HibernateException("Item is not found");
+            }
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            throw new HibernateException("Rating not updated");
+        }
+    }
+
     public void delete(Long id) {
         Transaction tx = null;
 

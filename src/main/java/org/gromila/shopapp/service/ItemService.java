@@ -36,6 +36,18 @@ public class ItemService {
         itemRepository.update(id, name);
     }
 
+    public void updateItemRating(Long itemId) {
+        Item item = itemRepository.findById(itemId);
+
+        double averageRating = item.getFeedbacks().stream()
+                .map(feedback -> feedback.getStars())
+                .mapToInt(value -> value)
+                .average()
+                .orElse(0.0);
+
+        itemRepository.updateRating(itemId, item, averageRating);
+    }
+
     public void delete(Long id) {
         itemRepository.delete(id);
     }

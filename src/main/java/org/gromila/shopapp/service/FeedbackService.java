@@ -11,15 +11,19 @@ import java.util.List;
 public class FeedbackService {
     private final FeedbackRepository feedbackRepository;
     private final FeedbackMapper feedbackMapper;
+    private final ItemService itemService;
 
-    public FeedbackService(FeedbackRepository feedbackRepository, FeedbackMapper feedbackMapper) {
+    public FeedbackService(FeedbackRepository feedbackRepository, FeedbackMapper feedbackMapper, ItemService itemService) {
         this.feedbackRepository = feedbackRepository;
         this.feedbackMapper = feedbackMapper;
+        this.itemService = itemService;
     }
 
     public Long create(Long itemId, FeedbackCreateDto createdFeedback) {
         Feedback feedback = feedbackMapper.mapToEntity(itemId, createdFeedback);
-        return feedbackRepository.create(feedback);
+        Long feedbackId = feedbackRepository.create(feedback);
+        itemService.updateItemRating(itemId);
+        return feedbackId;
     }
 
     public FeedbackDto findById(Long id) {

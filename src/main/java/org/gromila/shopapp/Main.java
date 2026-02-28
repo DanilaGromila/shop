@@ -1,6 +1,7 @@
 package org.gromila.shopapp;
 
-import org.gromila.shopapp.dto.UserCreateDto;
+import org.gromila.shopapp.dto.FeedbackCreateDto;
+import org.gromila.shopapp.dto.ItemCreateDto;
 import org.gromila.shopapp.mapper.*;
 import org.gromila.shopapp.repository.*;
 import org.gromila.shopapp.service.*;
@@ -30,32 +31,28 @@ public class Main {
         UserMapper userMapper = new UserMapper();
 
         PaymentService paymentService = new PaymentService(paymentRepository, paymentMapper);
-        FeedbackService feedbackService = new FeedbackService(feedbackRepository, feedbackMapper);
         ItemService itemService = new ItemService(itemRepository, itemMapper);
+        FeedbackService feedbackService = new FeedbackService(feedbackRepository, feedbackMapper, itemService);
         OrderDetailsService orderDetailsService = new OrderDetailsService(orderDetailsRepository, orderDetailsMapper);
         AuthorityService authorityService = new AuthorityService(authorityRepository, authorityMapper);
         RoleService roleService = new RoleService(roleRepository, roleMapper);
         OrderService orderService = new OrderService(orderRepository, orderMapper);
         UserService userService = new UserService(userRepository, userMapper);
 
+        ItemCreateDto itemDto = new ItemCreateDto();
+        itemDto.setName("test item");
+        Long testItemId = itemService.create(itemDto);
 
-        UserCreateDto createDto = new UserCreateDto("Andrey", "Yureiy", "Psix", "asdfa");
-        userService.create(createDto);
 
-        createDto = new UserCreateDto("Daniul", "Mel", "gromila", "kjfa;dl");
-        userService.create(createDto);
+        FeedbackCreateDto feedback1 = new FeedbackCreateDto("cool", 5);
+        feedbackService.create(testItemId, feedback1);
 
-        createDto = new UserCreateDto("Slava", "Yankovic", "Kommandos", "jfkdl;as");
-        userService.create(createDto);
+        System.out.println(itemService.findById(testItemId));
 
-        orderService.create(6L);
-        userService.addRole(6L, 7L);
+        FeedbackCreateDto feedback2 = new FeedbackCreateDto("bad", 2);
+        feedbackService.create(testItemId, feedback2);
 
-        Long admin = roleService.create("admin");
-        Long readusers = authorityService.create("readusers");
+        System.out.println(itemService.findById(testItemId));
 
-        roleService.addAuthority(admin, readusers);
-
-        System.out.println(userService.findById(6L));
     }
 }
