@@ -1,24 +1,23 @@
 package org.gromila.shopapp.service;
 
+import lombok.RequiredArgsConstructor;
 import org.gromila.shopapp.dto.UserCreateDto;
 import org.gromila.shopapp.dto.UserDto;
 import org.gromila.shopapp.entity.User;
+import org.gromila.shopapp.mapper.RoleMapper;
 import org.gromila.shopapp.mapper.UserMapper;
 import org.gromila.shopapp.repository.UserRepository;
+import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
-
-    public UserService(UserRepository userRepository, UserMapper userMapper) {
-        this.userRepository = userRepository;
-        this.userMapper = userMapper;
-    }
+    private final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
 
     public Long create(UserCreateDto createdUser) {
-        User user = userMapper.mapToEntity(createdUser);
+        User user = userMapper.toEntity(createdUser);
         return userRepository.create(user);
     }
 
@@ -27,15 +26,16 @@ public class UserService {
         userRepository.addRole(user, roleId);
     }
 
-
     public UserDto findById(Long id) {
         User user = userRepository.findById(id);
-        return userMapper.mapToDto(user);
+        return userMapper.toDto(user);
     }
 
     public List<UserDto> findAll() {
         List<User> users = userRepository.findAll();
-        return users.stream().map(user -> userMapper.mapToDto(user)).toList();
+        return users.stream()
+                .map(userMapper::toDto)
+                .toList();
     }
 
     public void update(Long id, String name, String surname, String login, String password) {

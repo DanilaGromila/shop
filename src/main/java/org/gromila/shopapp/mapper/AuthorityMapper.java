@@ -2,16 +2,16 @@ package org.gromila.shopapp.mapper;
 
 import org.gromila.shopapp.dto.AuthorityDto;
 import org.gromila.shopapp.entity.Authority;
+import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 
-public class AuthorityMapper {
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, unmappedSourcePolicy = ReportingPolicy.IGNORE)
+public interface AuthorityMapper {
 
-    public AuthorityDto mapToDto(Authority authority) {
+    AuthorityDto toDto(Authority authority);
+
+    default String mapAuthoritiesToNames(Authority authority) {
         if (authority == null) return null;
-
-        AuthorityDto dto = new AuthorityDto();
-        dto.setId(authority.getId());
-        dto.setName(authority.getName());
-
-        return dto;
+        return authority.getName();
     }
 }

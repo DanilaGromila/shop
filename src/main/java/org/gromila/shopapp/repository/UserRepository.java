@@ -1,5 +1,6 @@
 package org.gromila.shopapp.repository;
 
+import lombok.RequiredArgsConstructor;
 import org.gromila.shopapp.entity.Role;
 import org.gromila.shopapp.entity.User;
 import org.gromila.shopapp.exception.HibernateException;
@@ -9,14 +10,11 @@ import org.hibernate.Transaction;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 public class UserRepository {
     public static final String SELECT_BY_ID = "SELECT u FROM User u LEFT JOIN FETCH u.orders LEFT JOIN FETCH u.roles WHERE u.id = :id";
     public static final String SELECT_ALL = "SELECT u FROM User u LEFT JOIN FETCH u.orders LEFT JOIN FETCH u.roles";
     private final SessionFactory sessionFactory;
-
-    public UserRepository(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
 
     public Long create(User user) {
         Transaction tx = null;

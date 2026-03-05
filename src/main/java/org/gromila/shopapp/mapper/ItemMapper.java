@@ -1,42 +1,22 @@
 package org.gromila.shopapp.mapper;
 
-import org.gromila.shopapp.dto.FeedbackDto;
 import org.gromila.shopapp.dto.ItemCreateDto;
 import org.gromila.shopapp.dto.ItemDto;
 import org.gromila.shopapp.entity.Item;
+import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 
-import java.util.List;
+@Mapper(uses = FeedbackMapper.class, unmappedTargetPolicy = ReportingPolicy.IGNORE, unmappedSourcePolicy = ReportingPolicy.IGNORE)
+public interface ItemMapper {
 
-public class ItemMapper {
+    ItemDto toDto(Item item);
 
-    private final FeedbackMapper feedbackMapper;
+    Item toEntity(ItemCreateDto dto);
 
-    public ItemMapper(FeedbackMapper feedbackMapper) {
-        this.feedbackMapper = feedbackMapper;
-    }
-
-    public ItemDto mapToDto(Item item) {
-        if (item == null) return null;
-
-        ItemDto dto = new ItemDto();
-        dto.setId(item.getId());
-        dto.setName(item.getName());
-        dto.setRating(item.getRating());
-        List<FeedbackDto> feedbacks = item.getFeedbacks().stream()
-                .map(f -> feedbackMapper.mapToDto(f))
-                .toList();
-        dto.setFeedbacks(feedbacks);
-
-        return dto;
-    }
-
-    public Item mapToEntity(ItemCreateDto itemDto) {
-        if (itemDto == null) return null;
-
-        Item entity = new Item();
-        entity.setName(itemDto.getName());
-        entity.setRating(itemDto.getRating());
-
-        return entity;
+    default Item mapItem(Long itemId) {
+        if (itemId == null) return null;
+        Item item = new Item();
+        item.setId(itemId);
+        return item;
     }
 }

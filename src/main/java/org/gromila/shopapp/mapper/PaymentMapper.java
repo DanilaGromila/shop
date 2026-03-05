@@ -4,28 +4,20 @@ import org.gromila.shopapp.dto.PaymentCreateDto;
 import org.gromila.shopapp.dto.PaymentDto;
 import org.gromila.shopapp.entity.Order;
 import org.gromila.shopapp.entity.Payment;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
+import org.mapstruct.factory.Mappers;
 
-public class PaymentMapper {
-    public PaymentDto mapToDto(Payment payment) {
-        if (payment == null) return null;
+import java.util.List;
+import java.util.Set;
 
-        PaymentDto dto = new PaymentDto();
-        dto.setId(payment.getId());
-        dto.setPaymentStatus(payment.getPaymentStatus());
+@Mapper(uses = OrderMapper.class, unmappedTargetPolicy = ReportingPolicy.IGNORE, unmappedSourcePolicy = ReportingPolicy.IGNORE)
+public interface PaymentMapper {
 
-        return dto;
-    }
+    PaymentDto toDto(Payment payment);
 
-    public Payment mapToEntity(Long orderId, PaymentCreateDto paymentDto) {
-        if (paymentDto == null) return null;
-
-        Payment entity = new Payment();
-        entity.setPaymentStatus(paymentDto.getPaymentStatus());
-
-        Order order = new Order();
-        order.setId(orderId);
-        entity.setOrder(order);
-
-        return entity;
-    }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "order", source = "orderId")
+    Payment toEntity(Long orderId, PaymentCreateDto dto);
 }

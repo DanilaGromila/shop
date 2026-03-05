@@ -1,35 +1,33 @@
 package org.gromila.shopapp.service;
 
+import lombok.RequiredArgsConstructor;
 import org.gromila.shopapp.dto.ItemCreateDto;
 import org.gromila.shopapp.dto.ItemDto;
 import org.gromila.shopapp.entity.Item;
 import org.gromila.shopapp.mapper.ItemMapper;
 import org.gromila.shopapp.repository.ItemRepository;
+import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 public class ItemService {
     private final ItemRepository itemRepository;
-    private final ItemMapper itemMapper;
-
-    public ItemService(ItemRepository itemRepository, ItemMapper itemMapper) {
-        this.itemRepository = itemRepository;
-        this.itemMapper = itemMapper;
-    }
+    private final ItemMapper itemMapper = Mappers.getMapper(ItemMapper.class);
 
     public Long create(ItemCreateDto createdItem) {
-        Item item = itemMapper.mapToEntity(createdItem);
+        Item item = itemMapper.toEntity(createdItem);
         return itemRepository.create(item);
     }
 
     public ItemDto findById(Long id) {
         Item item = itemRepository.findById(id);
-        return itemMapper.mapToDto(item);
+        return itemMapper.toDto(item);
     }
 
     public List<ItemDto> findAll() {
         List<Item> items = itemRepository.findAll();
-        return items.stream().map(item -> itemMapper.mapToDto(item)).toList();
+        return items.stream().map(itemMapper::toDto).toList();
     }
 
     public void update(Long id, String name) {

@@ -10,7 +10,7 @@ import org.hibernate.SessionFactory;
 
 public class Main {
     public static void main(String[] args) {
-
+        System.out.println();
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         UserRepository userRepository = new UserRepository(sessionFactory);
         OrderRepository orderRepository = new OrderRepository(sessionFactory);
@@ -21,23 +21,14 @@ public class Main {
         AuthorityRepository authorityRepository = new AuthorityRepository(sessionFactory);
         PaymentRepository paymentRepository = new PaymentRepository(sessionFactory);
 
-        PaymentMapper paymentMapper = new PaymentMapper();
-        FeedbackMapper feedbackMapper = new FeedbackMapper();
-        ItemMapper itemMapper = new ItemMapper(feedbackMapper);
-        OrderDetailsMapper orderDetailsMapper = new OrderDetailsMapper();
-        OrderMapper orderMapper = new OrderMapper(orderDetailsMapper, paymentMapper);
-        AuthorityMapper authorityMapper = new AuthorityMapper();
-        RoleMapper roleMapper = new RoleMapper();
-        UserMapper userMapper = new UserMapper();
-
-        PaymentService paymentService = new PaymentService(paymentRepository, paymentMapper);
-        ItemService itemService = new ItemService(itemRepository, itemMapper);
-        FeedbackService feedbackService = new FeedbackService(feedbackRepository, feedbackMapper, itemService);
-        OrderDetailsService orderDetailsService = new OrderDetailsService(orderDetailsRepository, orderDetailsMapper);
-        AuthorityService authorityService = new AuthorityService(authorityRepository, authorityMapper);
-        RoleService roleService = new RoleService(roleRepository, roleMapper);
-        OrderService orderService = new OrderService(orderRepository, orderMapper);
-        UserService userService = new UserService(userRepository, userMapper);
+        PaymentService paymentService = new PaymentService(paymentRepository);
+        ItemService itemService = new ItemService(itemRepository);
+        FeedbackService feedbackService = new FeedbackService(feedbackRepository, itemService);
+        OrderDetailsService orderDetailsService = new OrderDetailsService(orderDetailsRepository);
+        AuthorityService authorityService = new AuthorityService(authorityRepository);
+        RoleService roleService = new RoleService(roleRepository);
+        OrderService orderService = new OrderService(orderRepository);
+        UserService userService = new UserService(userRepository);
 
         ItemCreateDto itemDto = new ItemCreateDto();
         itemDto.setName("test item");
@@ -53,6 +44,7 @@ public class Main {
         feedbackService.create(testItemId, feedback2);
 
         System.out.println(itemService.findById(testItemId));
+
 
     }
 }
