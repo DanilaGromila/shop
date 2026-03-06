@@ -2,22 +2,19 @@ package org.gromila.shopapp.mapper;
 
 import org.gromila.shopapp.dto.RoleDto;
 import org.gromila.shopapp.entity.Role;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 
-import java.util.List;
+@Mapper(uses = AuthorityMapper.class, unmappedTargetPolicy = ReportingPolicy.IGNORE, unmappedSourcePolicy = ReportingPolicy.IGNORE)
+public interface RoleMapper {
 
-public class RoleMapper {
-    public RoleDto mapToDto(Role role) {
+    @Mapping(source = "authorities", target = "authorities")
+    RoleDto toDto(Role role);
+
+    default String mapRolesToNames(Role role) {
         if (role == null) return null;
-
-        RoleDto dto = new RoleDto();
-        dto.setId(role.getId());
-        dto.setName(role.getName());
-        List<String> authorities = role.getAuthorities().stream()
-                .map(a -> a.getName())
-                .toList();
-        dto.setAuthorities(authorities);
-
-        return dto;
+        return role.getName();
     }
 }
 

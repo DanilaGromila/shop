@@ -1,38 +1,27 @@
 package org.gromila.shopapp.mapper;
 
-import org.gromila.shopapp.dto.OrderDetailsDto;
 import org.gromila.shopapp.dto.OrderDto;
-import org.gromila.shopapp.dto.PaymentDto;
 import org.gromila.shopapp.entity.Order;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 
-import java.util.List;
+@Mapper(uses = {OrderDetailsMapper.class, PaymentMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE, unmappedSourcePolicy = ReportingPolicy.IGNORE)
+public interface OrderMapper {
 
-public class OrderMapper {
+    @Mapping(source = "orderDetails", target = "orderDetails")
+    @Mapping(source = "payments", target = "payments")
+    OrderDto toDto(Order order);
 
-    private final OrderDetailsMapper orderDetailsMapper;
-    private final PaymentMapper paymentMapper;
-
-    public OrderMapper(OrderDetailsMapper orderDetailsMapper, PaymentMapper paymentMapper) {
-        this.orderDetailsMapper = orderDetailsMapper;
-        this.paymentMapper = paymentMapper;
+    default Order mapOrder(Long orderId) {
+        if (orderId == null) return null;
+        Order order = new Order();
+        order.setId(orderId);
+        return order;
     }
 
-    public OrderDto mapToDto(Order order) {
+    default Long mapOrdersToIds(Order order) {
         if (order == null) return null;
-
-        OrderDto dto = new OrderDto();
-        dto.setId(order.getId());
-        dto.setUser(order.getUser());
-        List<OrderDetailsDto> orderDetails = order.getOrderDetails().stream()
-                .map(od -> orderDetailsMapper.mapToDto(od))
-                .toList();
-        dto.setOrderDetails(orderDetails);
-
-        List<PaymentDto> payments = order.getPayments().stream()
-                .map(p -> paymentMapper.mapToDto(p))
-                .toList();
-        dto.setPayments(payments);
-
-        return dto;
+        return order.getId();
     }
 }

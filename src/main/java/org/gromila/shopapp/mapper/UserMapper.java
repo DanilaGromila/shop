@@ -3,40 +3,19 @@ package org.gromila.shopapp.mapper;
 import org.gromila.shopapp.dto.UserCreateDto;
 import org.gromila.shopapp.dto.UserDto;
 import org.gromila.shopapp.entity.User;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 
-import java.util.List;
+@Mapper(uses = {OrderMapper.class, RoleMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE, unmappedSourcePolicy = ReportingPolicy.IGNORE)
+public interface UserMapper {
 
-public class UserMapper {
-    public UserDto mapToDto(User user) {
-        if (user == null) return null;
+    @Mapping(source = "orders", target = "orderIds")
+    @Mapping(source = "roles", target = "roles")
+    UserDto toDto(User user);
 
-        UserDto dto = new UserDto();
-        dto.setId(user.getId());
-        dto.setName(user.getName());
-        dto.setSurname(user.getSurname());
-        dto.setLogin(user.getLogin());
-        List<Long> orderIds = user.getOrders().stream()
-                .map(o -> o.getId())
-                .toList();
-        dto.setOrderIds(orderIds);
-
-        List<String> roles = user.getRoles().stream()
-                .map(r -> r.getName())
-                .toList();
-        dto.setRoles(roles);
-
-        return dto;
-    }
-
-    public User mapToEntity(UserCreateDto user) {
-        if (user == null) return null;
-
-        User entity = new User();
-        entity.setName(user.getName());
-        entity.setSurname(user.getSurname());
-        entity.setLogin(user.getLogin());
-        entity.setPassword(user.getPassword());
-
-        return entity;
-    }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "orders", ignore = true)
+    @Mapping(target = "roles", ignore = true)
+    User toEntity(UserCreateDto dto);
 }

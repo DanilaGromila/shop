@@ -1,5 +1,6 @@
 package org.gromila.shopapp.repository;
 
+import lombok.RequiredArgsConstructor;
 import org.gromila.shopapp.entity.Order;
 import org.gromila.shopapp.entity.User;
 import org.gromila.shopapp.exception.HibernateException;
@@ -9,14 +10,11 @@ import org.hibernate.Transaction;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 public class OrderRepository {
     public static final String SELECT_ALL = "SELECT o FROM Order o LEFT JOIN FETCH o.orderDetails";
     public static final String SELECT_BY_ID = "SELECT o FROM Order o LEFT JOIN FETCH o.orderDetails WHERE o.id = :id";
     private final SessionFactory sessionFactory;
-
-    public OrderRepository(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
 
     public Long create(Long userId) throws HibernateException {
         Transaction tx = null;

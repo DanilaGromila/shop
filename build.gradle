@@ -12,6 +12,16 @@ repositories {
 dependencies {
     implementation 'org.hibernate:hibernate-core:5.6.9.Final'
     implementation 'org.postgresql:postgresql:42.7.8'
+
+    // MapStruct
+    implementation 'org.mapstruct:mapstruct:1.6.3'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.36'// Lombok нужен только для компиляции. Это значит, что Lombok не будет включен в итоговый JAR-файл приложения
+    annotationProcessor 'org.projectlombok:lombok:1.18.36'//сообщает компилятору Java, что Lombok должен работать как процессор аннотаций, генерируя код прямо во время компиляции
+
+    // MapStruct annotation processor
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
 }
 
 test {

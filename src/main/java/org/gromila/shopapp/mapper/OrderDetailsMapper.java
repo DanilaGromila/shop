@@ -2,39 +2,23 @@ package org.gromila.shopapp.mapper;
 
 import org.gromila.shopapp.dto.OrderDetailsCreateDto;
 import org.gromila.shopapp.dto.OrderDetailsDto;
-import org.gromila.shopapp.entity.Item;
-import org.gromila.shopapp.entity.Order;
 import org.gromila.shopapp.entity.OrderDetails;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
+import org.mapstruct.factory.Mappers;
 
-public class OrderDetailsMapper {
+import java.util.List;
+import java.util.Set;
 
-    public OrderDetailsDto mapToDto(OrderDetails orderDetails) {
-        if (orderDetails == null) return null;
+@Mapper(uses = {ItemMapper.class, OrderMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE, unmappedSourcePolicy = ReportingPolicy.IGNORE)
+public interface OrderDetailsMapper {
 
-        OrderDetailsDto dto = new OrderDetailsDto();
-        dto.setId(orderDetails.getId());
-        dto.setOrderId(orderDetails.getOrder().getId());
-        dto.setItemId(orderDetails.getItem().getId());
-        dto.setQuantity(orderDetails.getQuantity());
+    @Mapping(source = "order.id", target = "orderId")
+    @Mapping(source = "item.id", target = "itemId")
+    OrderDetailsDto toDto(OrderDetails orderDetails);
 
-        return dto;
-    }
-
-    public OrderDetails mapToEntity(Long orderId, OrderDetailsCreateDto orderDetailsDto) {
-        if (orderDetailsDto == null) return null;
-
-        OrderDetails entity = new OrderDetails();
-
-        Order order = new Order();
-        order.setId(orderId);
-        entity.setOrder(order);
-
-        Item item = new Item();
-        item.setId(orderDetailsDto.getItemId());
-        entity.setItem(item);
-
-        entity.setQuantity(entity.getQuantity());
-
-        return entity;
-    }
+    @Mapping(target = "order", source = "orderId")
+    @Mapping(target = "item", source = "dto.itemId")
+    OrderDetails toEntity(Long orderId, OrderDetailsCreateDto dto);
 }
