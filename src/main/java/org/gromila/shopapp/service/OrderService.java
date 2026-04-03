@@ -3,13 +3,14 @@ package org.gromila.shopapp.service;
 import lombok.RequiredArgsConstructor;
 import org.gromila.shopapp.dto.OrderDto;
 import org.gromila.shopapp.entity.Order;
-import org.gromila.shopapp.mapper.OrderDetailsMapper;
 import org.gromila.shopapp.mapper.OrderMapper;
 import org.gromila.shopapp.repository.OrderRepository;
 import org.mapstruct.factory.Mappers;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 @RequiredArgsConstructor
 public class OrderService {
     private final OrderRepository orderRepository;

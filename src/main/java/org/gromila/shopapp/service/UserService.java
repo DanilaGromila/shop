@@ -4,13 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.gromila.shopapp.dto.UserCreateDto;
 import org.gromila.shopapp.dto.UserDto;
 import org.gromila.shopapp.entity.User;
-import org.gromila.shopapp.mapper.RoleMapper;
 import org.gromila.shopapp.mapper.UserMapper;
 import org.gromila.shopapp.repository.UserRepository;
 import org.mapstruct.factory.Mappers;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
@@ -21,7 +22,7 @@ public class UserService {
         return userRepository.create(user);
     }
 
-    public void addRole(Long userId, Long roleId){
+    public void addRole(Long userId, Long roleId) {
         User user = userRepository.findById(userId);
         userRepository.addRole(user, roleId);
     }

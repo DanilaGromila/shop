@@ -5,14 +5,15 @@ import org.gromila.shopapp.dto.AuthorityDto;
 import org.gromila.shopapp.entity.Authority;
 import org.gromila.shopapp.mapper.AuthorityMapper;
 import org.gromila.shopapp.repository.AuthorityRepository;
-import org.mapstruct.factory.Mappers;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 @RequiredArgsConstructor
 public class AuthorityService {
     private final AuthorityRepository authorityRepository;
-    private final AuthorityMapper authorityMapper = Mappers.getMapper(AuthorityMapper.class) ;
+    private final AuthorityMapper authorityMapper;
 
     public Long create(String name) {
         return authorityRepository.create(name);

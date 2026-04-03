@@ -6,9 +6,11 @@ import org.gromila.shopapp.exception.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 @RequiredArgsConstructor
 public class ItemRepository {
     public static final String SELECT_BY_ID = "SELECT i FROM Item i LEFT JOIN FETCH i.feedbacks WHERE i.id = :id";

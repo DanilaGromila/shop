@@ -6,9 +6,11 @@ import org.gromila.shopapp.exception.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 @RequiredArgsConstructor
 public class OrderDetailsRepository {
     public static final String SELECT_BY_ID = "SELECT od FROM OrderDetails od LEFT JOIN FETCH od.order LEFT JOIN FETCH od.item WHERE od.id = :id";

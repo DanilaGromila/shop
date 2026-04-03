@@ -4,13 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.gromila.shopapp.dto.FeedbackCreateDto;
 import org.gromila.shopapp.dto.FeedbackDto;
 import org.gromila.shopapp.entity.Feedback;
-import org.gromila.shopapp.mapper.AuthorityMapper;
+import org.gromila.shopapp.entity.Item;
 import org.gromila.shopapp.mapper.FeedbackMapper;
 import org.gromila.shopapp.repository.FeedbackRepository;
 import org.mapstruct.factory.Mappers;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 @RequiredArgsConstructor
 public class FeedbackService {
     private final FeedbackRepository feedbackRepository;
@@ -18,7 +20,8 @@ public class FeedbackService {
     private final FeedbackMapper feedbackMapper = Mappers.getMapper(FeedbackMapper.class);
 
     public Long create(Long itemId, FeedbackCreateDto createdFeedback) {
-        Feedback feedback = feedbackMapper.toEntity(itemId, createdFeedback);
+        Feedback feedback = feedbackMapper.toEntity(createdFeedback);
+        feedback.setItem(new Item(itemId));
         Long feedbackId = feedbackRepository.create(feedback);
         itemService.updateItemRating(itemId);
         return feedbackId;

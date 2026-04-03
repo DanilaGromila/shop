@@ -1,6 +1,8 @@
 package org.gromila.shopapp.entity;
 
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -29,4 +31,8 @@ public class Order {
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Payment> payments = new HashSet<>();
+
+    public Order(Long id) {
+        this.id = id;
+    }
 }
