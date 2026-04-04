@@ -1,6 +1,8 @@
 package org.gromila.shopapp.entity;
 
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -30,4 +32,8 @@ public class Item {
             orphanRemoval = true
     )
     private Set<Feedback> feedbacks = new HashSet<>();
+
+    public Item(Long id) {
+        this.id = id;
+    }
 }

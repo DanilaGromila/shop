@@ -5,7 +5,8 @@ import org.gromila.shopapp.entity.Authority;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, unmappedSourcePolicy = ReportingPolicy.IGNORE)
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, unmappedSourcePolicy = ReportingPolicy.IGNORE,
+        componentModel = "spring")
 public interface AuthorityMapper {
 
     AuthorityDto toDto(Authority authority);

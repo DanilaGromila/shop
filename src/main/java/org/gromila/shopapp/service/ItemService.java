@@ -7,9 +7,11 @@ import org.gromila.shopapp.entity.Item;
 import org.gromila.shopapp.mapper.ItemMapper;
 import org.gromila.shopapp.repository.ItemRepository;
 import org.mapstruct.factory.Mappers;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 @RequiredArgsConstructor
 public class ItemService {
     private final ItemRepository itemRepository;

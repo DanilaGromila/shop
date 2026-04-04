@@ -6,9 +6,11 @@ import org.gromila.shopapp.exception.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 @RequiredArgsConstructor
 public class AuthorityRepository {
     public static final String SELECT_BY_ID = "SELECT a FROM Authority a LEFT JOIN FETCH a.roles WHERE a.id = :id";

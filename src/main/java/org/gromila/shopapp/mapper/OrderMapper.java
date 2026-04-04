@@ -6,7 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(uses = {OrderDetailsMapper.class, PaymentMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE, unmappedSourcePolicy = ReportingPolicy.IGNORE)
+@Mapper(uses = {OrderDetailsMapper.class, PaymentMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE, unmappedSourcePolicy = ReportingPolicy.IGNORE,
+        componentModel = "spring")
 public interface OrderMapper {
 
     @Mapping(source = "orderDetails", target = "orderDetails")

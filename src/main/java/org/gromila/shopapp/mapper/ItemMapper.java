@@ -6,7 +6,8 @@ import org.gromila.shopapp.entity.Item;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(uses = FeedbackMapper.class, unmappedTargetPolicy = ReportingPolicy.IGNORE, unmappedSourcePolicy = ReportingPolicy.IGNORE)
+@Mapper(uses = FeedbackMapper.class, unmappedTargetPolicy = ReportingPolicy.IGNORE, unmappedSourcePolicy = ReportingPolicy.IGNORE,
+        componentModel = "spring")
 public interface ItemMapper {
 
     ItemDto toDto(Item item);

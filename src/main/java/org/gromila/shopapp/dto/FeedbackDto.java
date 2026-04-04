@@ -1,6 +1,8 @@
 package org.gromila.shopapp.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -8,7 +10,6 @@ import lombok.*;
 public class FeedbackDto {
     private Long id;
     private String text;
-    private Long itemId;
     private Integer stars;
 }
 
