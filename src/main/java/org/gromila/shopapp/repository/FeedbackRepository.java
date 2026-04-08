@@ -2,6 +2,7 @@ package org.gromila.shopapp.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.gromila.shopapp.entity.Feedback;
+import org.gromila.shopapp.entity.Item;
 import org.gromila.shopapp.exception.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -13,8 +14,8 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class FeedbackRepository {
-    public static final String SELECT_BY_ID = "SELECT f FROM Feedback f LEFT JOIN FETCH f.item WHERE f.id = :id";
-    public static final String SELECT_ALL = "SELECT f FROM Feedback f LEFT JOIN FETCH f.item";
+    public static final String SELECT_BY_ID = "SELECT f FROM Feedback f LEFT JOIN FETCH f.item i WHERE f.id = :id AND i.id = :itemId";
+    public static final String SELECT_ALL = "SELECT f FROM Feedback f LEFT JOIN FETCH f.item i WHERE i.id = :itemId";
     private final SessionFactory sessionFactory;
 
     public Long create(Feedback feedback) {
@@ -32,10 +33,11 @@ public class FeedbackRepository {
         }
     }
 
-    public Feedback findById(Long id) {
+    public Feedback findById(Long itemId, Long id) {
         try (Session session = sessionFactory.openSession()) {
             Feedback feedback = session.createQuery(SELECT_BY_ID, Feedback.class)
                     .setParameter("id", id)
+                    .setParameter("itemId", itemId)
                     .uniqueResult();
             if (feedback != null) {
                 return feedback;
@@ -45,9 +47,10 @@ public class FeedbackRepository {
         }
     }
 
-    public List<Feedback> findAll() {
+    public List<Feedback> findAll(Long itemId) {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery(SELECT_ALL, Feedback.class)
+                    .setParameter("itemId", itemId)
                     .getResultList();
         }
     }
@@ -73,13 +76,13 @@ public class FeedbackRepository {
         }
     }
 
-    public void delete(Long id) {
+    public void delete(Long itemId, Long id) {
         Transaction tx = null;
 
         try (Session session = sessionFactory.openSession()) {
             tx = session.beginTransaction();
 
-            Feedback feedback = session.get(Feedback.class, id);
+            Feedback feedback = findById(itemId, id);
 
             if (feedback != null) {
                 session.delete(feedback);

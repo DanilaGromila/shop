@@ -15,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
+    private final UserMapper userMapper;
 
     public Long create(UserCreateDto createdUser) {
         User user = userMapper.toEntity(createdUser);

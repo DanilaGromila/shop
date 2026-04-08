@@ -14,8 +14,8 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class RoleRepository {
-    public static final String SELECT_BY_ID = "SELECT r FROM Role r LEFT JOIN FETCH r.users LEFT JOIN FETCH r.authorities WHERE r.id = :id";
-    public static final String SELECT_ALL = "SELECT r FROM Role r LEFT JOIN FETCH r.users LEFT JOIN FETCH r.authorities";
+    public static final String SELECT_BY_ID = "SELECT r FROM Role r LEFT JOIN FETCH r.users u LEFT JOIN FETCH r.authorities WHERE r.id = :id";
+    public static final String SELECT_ALL = "SELECT r FROM Role r LEFT JOIN FETCH r.users u LEFT JOIN FETCH r.authorities";
     private final SessionFactory sessionFactory;
 
     public Long create(String name) {
@@ -101,7 +101,7 @@ public class RoleRepository {
         try (Session session = sessionFactory.openSession()) {
             tx = session.beginTransaction();
 
-            Role role = session.get(Role.class, id);
+            Role role = findById(id);
 
             if (role != null) {
                 session.delete(role);

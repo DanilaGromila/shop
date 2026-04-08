@@ -13,8 +13,8 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class PaymentRepository {
-    public static final String SELECT_BY_ID = "SELECT p FROM Payment p LEFT JOIN FETCH p.order WHERE a.id = :id";
-    public static final String SELECT_ALL = "SELECT p FROM Payment p LEFT JOIN FETCH p.order";
+    public static final String SELECT_BY_ID = "SELECT p FROM Payment p LEFT JOIN FETCH p.order o WHERE p.id = :id AND o.id = :orderId AND o.user.id = :userId";
+    public static final String SELECT_ALL = "SELECT p FROM Payment p LEFT JOIN FETCH p.order o WHERE o.id = :orderId AND o.user.id = :userId";
     private final SessionFactory sessionFactory;
 
     public Long create(Payment payment) {
@@ -32,10 +32,12 @@ public class PaymentRepository {
         }
     }
 
-    public Payment findById(Long id) {
+    public Payment findById(Long userId, Long orderId, Long id) {
         try (Session session = sessionFactory.openSession()) {
             Payment payment = session.createQuery(SELECT_BY_ID, Payment.class)
                     .setParameter("id", id)
+                    .setParameter("orderId", orderId)
+                    .setParameter("userId", userId)
                     .uniqueResult();
             if (payment != null) {
                 return payment;
@@ -45,9 +47,11 @@ public class PaymentRepository {
         }
     }
 
-    public List<Payment> findAll() {
+    public List<Payment> findAll(Long userId, Long orderId) {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery(SELECT_ALL, Payment.class)
+                    .setParameter("orderId", orderId)
+                    .setParameter("userId", userId)
                     .getResultList();
         }
     }
@@ -74,13 +78,13 @@ public class PaymentRepository {
         }
     }
 
-    public void delete(Long id) {
+    public void delete(Long userId, Long orderId, Long id) {
         Transaction tx = null;
 
         try (Session session = sessionFactory.openSession()) {
             tx = session.beginTransaction();
 
-            Payment payment = session.get(Payment.class, id);
+            Payment payment = findById(userId, orderId, id);
 
             if (payment != null) {
                 session.delete(payment);

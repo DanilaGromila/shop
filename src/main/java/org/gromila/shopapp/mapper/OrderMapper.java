@@ -10,6 +10,7 @@ import org.mapstruct.ReportingPolicy;
         componentModel = "spring")
 public interface OrderMapper {
 
+    @Mapping(source = "user.id", target = "userId")
     @Mapping(source = "orderDetails", target = "orderDetails")
     @Mapping(source = "payments", target = "payments")
     OrderDto toDto(Order order);

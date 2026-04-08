@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id 'org.springframework.boot' version "4.0.3"
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'org.gromila'
@@ -10,7 +12,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework:spring-context:7.0.5'
+    implementation'org.springframework.boot:spring-boot-starter-web'
 
     implementation 'org.hibernate:hibernate-core:5.6.9.Final'
     implementation 'org.postgresql:postgresql:42.7.8'
@@ -18,10 +20,13 @@ dependencies {
     // MapStruct
     implementation 'org.mapstruct:mapstruct:1.6.3'
 
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.1'
+
     // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.36'// Lombok нужен только для компиляции. Это значит, что Lombok не будет включен в итоговый JAR-файл приложения
     annotationProcessor 'org.projectlombok:lombok:1.18.36'//сообщает компилятору Java, что Lombok должен работать как процессор аннотаций, генерируя код прямо во время компиляции
-
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
     // MapStruct annotation processor
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
 }

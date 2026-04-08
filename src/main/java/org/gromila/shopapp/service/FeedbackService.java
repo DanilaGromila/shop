@@ -17,9 +17,10 @@ import java.util.List;
 public class FeedbackService {
     private final FeedbackRepository feedbackRepository;
     private final ItemService itemService;
-    private final FeedbackMapper feedbackMapper = Mappers.getMapper(FeedbackMapper.class);
+    private final FeedbackMapper feedbackMapper;
 
     public Long create(Long itemId, FeedbackCreateDto createdFeedback) {
+        itemService.findById(itemId);
         Feedback feedback = feedbackMapper.toEntity(createdFeedback);
         feedback.setItem(new Item(itemId));
         Long feedbackId = feedbackRepository.create(feedback);
@@ -27,17 +28,17 @@ public class FeedbackService {
         return feedbackId;
     }
 
-    public FeedbackDto findById(Long id) {
-        Feedback feedback = feedbackRepository.findById(id);
+    public FeedbackDto findById(Long itemId,Long id) {
+        Feedback feedback = feedbackRepository.findById(itemId, id);
         return feedbackMapper.toDto(feedback);
     }
 
-    public List<FeedbackDto> findAll() {
-        List<Feedback> feedbacks = feedbackRepository.findAll();
+    public List<FeedbackDto> findAll(Long itemId) {
+        List<Feedback> feedbacks = feedbackRepository.findAll(itemId);
         return feedbacks.stream().map(feedbackMapper::toDto).toList();
     }
 
-    public void delete(Long id) {
-        feedbackRepository.delete(id);
+    public void delete(Long itemId, Long id) {
+        feedbackRepository.delete(itemId, id);
     }
 }

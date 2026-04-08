@@ -13,8 +13,8 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class AuthorityRepository {
-    public static final String SELECT_BY_ID = "SELECT a FROM Authority a LEFT JOIN FETCH a.roles WHERE a.id = :id";
-    public static final String SELECT_ALL = "SELECT a FROM Authority a LEFT JOIN FETCH a.roles";
+    public static final String SELECT_BY_ID = "SELECT a FROM Authority a LEFT JOIN FETCH a.roles r WHERE a.id = :id";
+    public static final String SELECT_ALL = "SELECT a FROM Authority a LEFT JOIN FETCH a.roles r";
     private final SessionFactory sessionFactory;
 
     public Long create(String name) {
@@ -82,7 +82,7 @@ public class AuthorityRepository {
         try (Session session = sessionFactory.openSession()) {
             tx = session.beginTransaction();
 
-            Authority authority = session.get(Authority.class, id);
+            Authority authority = findById(id);
 
             if (authority != null) {
                 session.delete(authority);

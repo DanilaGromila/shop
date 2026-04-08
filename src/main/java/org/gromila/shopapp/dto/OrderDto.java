@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderDto {
     private Long id;
-    private User user;
+    private Long userId;
     private List<OrderDetailsDto> orderDetails = new ArrayList<>();
     private List<PaymentDto> payments = new ArrayList<>();
 }

@@ -15,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ItemService {
     private final ItemRepository itemRepository;
-    private final ItemMapper itemMapper = Mappers.getMapper(ItemMapper.class);
+    private final ItemMapper itemMapper;
 
     public Long create(ItemCreateDto createdItem) {
         Item item = itemMapper.toEntity(createdItem);

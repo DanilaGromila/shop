@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RoleService {
     private final RoleRepository roleRepository;
-    private final RoleMapper roleMapper = Mappers.getMapper(RoleMapper.class);
+    private final RoleMapper roleMapper;
 
     public Long create(String name) {
         return roleRepository.create(name);

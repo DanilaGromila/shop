@@ -29,7 +29,7 @@ public class AuthorityService {
         return authorities.stream().map(authorityMapper::toDto).toList();
     }
 
-    public void delete(Long id) {
+    public void delete( Long id) {
         authorityRepository.delete(id);
     }
 }

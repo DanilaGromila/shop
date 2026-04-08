@@ -14,8 +14,8 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class OrderRepository {
-    public static final String SELECT_ALL = "SELECT o FROM Order o LEFT JOIN FETCH o.orderDetails";
-    public static final String SELECT_BY_ID = "SELECT o FROM Order o LEFT JOIN FETCH o.orderDetails WHERE o.id = :id";
+    public static final String SELECT_BY_ID = "SELECT o FROM Order o LEFT JOIN FETCH o.orderDetails LEFT JOIN FETCH o.payments WHERE o.id = :id AND o.user.id = :userId";
+    public static final String SELECT_ALL = "SELECT o FROM Order o LEFT JOIN FETCH o.orderDetails LEFT JOIN FETCH o.payments WHERE o.user.id = :userId";
     private final SessionFactory sessionFactory;
 
     public Long create(Long userId) throws HibernateException {
@@ -40,10 +40,11 @@ public class OrderRepository {
         }
     }
 
-    public Order findById(Long id) {
+    public Order findById(Long userId, Long id) {
         try (Session session = sessionFactory.openSession()) {
             Order order = session.createQuery(SELECT_BY_ID, Order.class)
                     .setParameter("id", id)
+                    .setParameter("userId", userId)
                     .uniqueResult();
             if (order != null) {
                 return order;
@@ -53,21 +54,22 @@ public class OrderRepository {
         }
     }
 
-    public List<Order> findAll() {
+    public List<Order> findAll(Long userId) {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery(SELECT_ALL, Order.class)
+                    .setParameter("userId", userId)
                     .getResultList();
         }
     }
 
 
-    public void delete(Long id) {
+    public void delete(Long userId, Long id) {
         Transaction tx = null;
 
         try (Session session = sessionFactory.openSession()) {
             tx = session.beginTransaction();
 
-            Order order = session.get(Order.class, id);
+            Order order = findById(userId, id);
 
             if (order != null) {
                 session.delete(order);
