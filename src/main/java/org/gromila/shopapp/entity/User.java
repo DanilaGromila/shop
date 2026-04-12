@@ -1,10 +1,10 @@
 package org.gromila.shopapp.entity;
 
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -54,5 +54,9 @@ public class User {
         this.surname = surname;
         this.login = login;
         this.password = password;
+    }
+
+    public User(Long id) {
+        this.id = id;
     }
 }

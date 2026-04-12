@@ -6,6 +6,7 @@ import org.gromila.shopapp.entity.Authority;
 import org.gromila.shopapp.mapper.AuthorityMapper;
 import org.gromila.shopapp.repository.AuthorityRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,12 +16,16 @@ public class AuthorityService {
     private final AuthorityRepository authorityRepository;
     private final AuthorityMapper authorityMapper;
 
+
     public Long create(String name) {
-        return authorityRepository.create(name);
+        Authority authority = new Authority();
+        authority.setName(name);
+        return authorityRepository.save(authority).getId();
     }
 
     public AuthorityDto findById(Long id) {
-        Authority authority = authorityRepository.findById(id);
+        Authority authority = authorityRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Authority no found"));
         return authorityMapper.toDto(authority);
     }
 
@@ -29,7 +34,10 @@ public class AuthorityService {
         return authorities.stream().map(authorityMapper::toDto).toList();
     }
 
-    public void delete( Long id) {
-        authorityRepository.delete(id);
+    @Transactional
+    public void delete(Long id) {
+        Authority authority = authorityRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Authority no found"));
+        authorityRepository.delete(authority);
     }
 }

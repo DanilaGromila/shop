@@ -14,7 +14,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public Long create(@RequestParam Long userId) {
+    public Long create(@PathVariable Long userId) {
         return orderService.create(userId);
     }
 

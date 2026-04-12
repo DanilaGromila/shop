@@ -29,6 +29,15 @@ public class UserController {
         return userService.findAll();
     }
 
+    @PutMapping("/{id}")
+    public UserDto update(@PathVariable Long id,
+                          @RequestParam String name,
+                          @RequestParam String surname,
+                          @RequestParam String login,
+                          @RequestParam String password) {
+        return userService.update(id, name, surname, login, password);
+    }
+
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         userService.delete(id);

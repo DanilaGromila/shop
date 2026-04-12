@@ -28,13 +28,13 @@ public class RoleController {
         return roleService.findAll();
     }
 
-    @GetMapping("/{id}/authorities/{authorityId}")
-    public void addAuthority(@PathVariable Long id, @PathVariable Long authorityId){
+    @PostMapping("/{id}/authorities/{authorityId}")
+    public void addAuthority(@PathVariable Long id, @PathVariable Long authorityId) {
         roleService.addAuthority(id, authorityId);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        roleService.delete( id);
+        roleService.delete(id);
     }
 }

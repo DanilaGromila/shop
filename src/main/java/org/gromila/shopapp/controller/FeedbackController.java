@@ -16,7 +16,7 @@ public class FeedbackController {
 
     @PostMapping
     public Long create(@PathVariable Long itemId,
-                       @RequestBody FeedbackCreateDto feedbackCreateDto){
+                       @RequestBody FeedbackCreateDto feedbackCreateDto) {
         return feedbackService.create(itemId, feedbackCreateDto);
     }
 
@@ -26,8 +26,8 @@ public class FeedbackController {
     }
 
     @GetMapping("/{id}")
-    public FeedbackDto findById(@PathVariable Long itemId, @PathVariable Long id){
-        return feedbackService.findById(itemId,id);
+    public FeedbackDto findById(@PathVariable Long itemId, @PathVariable Long id) {
+        return feedbackService.findById(itemId, id);
     }
 
     @DeleteMapping("/{id}")

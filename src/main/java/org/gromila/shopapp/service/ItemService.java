@@ -6,8 +6,8 @@ import org.gromila.shopapp.dto.ItemDto;
 import org.gromila.shopapp.entity.Item;
 import org.gromila.shopapp.mapper.ItemMapper;
 import org.gromila.shopapp.repository.ItemRepository;
-import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,11 +19,12 @@ public class ItemService {
 
     public Long create(ItemCreateDto createdItem) {
         Item item = itemMapper.toEntity(createdItem);
-        return itemRepository.create(item);
+        return itemRepository.save(item).getId();
     }
 
     public ItemDto findById(Long id) {
-        Item item = itemRepository.findById(id);
+        Item item = itemRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Item no found"));
         return itemMapper.toDto(item);
     }
 
@@ -32,12 +33,18 @@ public class ItemService {
         return items.stream().map(itemMapper::toDto).toList();
     }
 
+    @Transactional
     public void update(Long id, String name) {
-        itemRepository.update(id, name);
+        Item item = itemRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Item no found"));
+        item.setName(name);
+        itemRepository.save(item);
     }
 
-    public void updateItemRating(Long itemId) {
-        Item item = itemRepository.findById(itemId);
+    @Transactional
+    public void updateItemRating(Long id) {
+        Item item = itemRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Item no found"));
 
         double averageRating = item.getFeedbacks().stream()
                 .map(feedback -> feedback.getStars())
@@ -45,10 +52,14 @@ public class ItemService {
                 .average()
                 .orElse(0.0);
 
-        itemRepository.updateRating(itemId, item, averageRating);
+        item.setRating(averageRating);
+        itemRepository.save(item);
     }
 
+    @Transactional
     public void delete(Long id) {
-        itemRepository.delete(id);
+        Item item = itemRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Item no found"));
+        itemRepository.delete(item);
     }
 }
