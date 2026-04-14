@@ -1,11 +1,7 @@
 package org.gromila.shopapp.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "order_details")
@@ -20,11 +16,13 @@ public class OrderDetails {
     private Long id;
 
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "item_id", nullable = false)
     private Item item;

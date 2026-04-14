@@ -1,10 +1,11 @@
 package org.gromila.shopapp.entity;
 
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,10 +23,12 @@ public class Role {
     private String name;
 
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToMany(mappedBy = "roles")
     private Set<User> users = new HashSet<>();
 
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToMany
     @JoinTable(
             name = "roles_authorities_links",

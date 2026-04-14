@@ -1,10 +1,13 @@
 package org.gromila.shopapp.entity;
 
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import javax.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,9 +25,10 @@ public class Item {
     private String name;
 
     @Column(name = "rating")
-    private Double rating;
+    private BigDecimal rating;
 
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @OneToMany(
             mappedBy = "item",
             fetch = FetchType.LAZY,
@@ -35,5 +39,10 @@ public class Item {
 
     public Item(Long id) {
         this.id = id;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        rating = BigDecimal.ZERO;
     }
 }
