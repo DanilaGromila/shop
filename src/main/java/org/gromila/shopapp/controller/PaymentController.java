@@ -3,6 +3,7 @@ package org.gromila.shopapp.controller;
 import lombok.RequiredArgsConstructor;
 import org.gromila.shopapp.dto.PaymentCreateDto;
 import org.gromila.shopapp.dto.PaymentDto;
+import org.gromila.shopapp.entity.PaymentStatus;
 import org.gromila.shopapp.service.PaymentService;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +33,13 @@ public class PaymentController {
     public List<PaymentDto> findAll(@PathVariable Long userId,
                                     @PathVariable Long orderId) {
         return paymentService.findAll(userId, orderId);
+    }
+
+    @PostMapping("/{id}/pay")
+    public PaymentStatus pay(@PathVariable Long userId,
+                             @PathVariable Long orderId,
+                             @PathVariable Long id) {
+        return paymentService.pay(userId, orderId, id);
     }
 
     @DeleteMapping("/{id}")
