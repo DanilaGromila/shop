@@ -1,7 +1,6 @@
 package org.gromila.shopapp.service;
 
 import lombok.RequiredArgsConstructor;
-import org.gromila.shopapp.dto.PaymentCreateDto;
 import org.gromila.shopapp.dto.PaymentDto;
 import org.gromila.shopapp.entity.Order;
 import org.gromila.shopapp.entity.Payment;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Random;
 
@@ -26,9 +24,9 @@ public class PaymentService {
     private final OrderService orderService;
 
     @Transactional
-    public Long create(Long userId, Long orderId, PaymentCreateDto createdPayment) {
+    public Long create(Long userId, Long orderId) {
         orderService.findById(userId, orderId);
-        Payment payment = paymentMapper.toEntity(createdPayment);
+        Payment payment = new Payment();
         payment.setOrder(new Order(orderId));
         payment.setPaymentStatus(PaymentStatus.IN_PROCESS);
         return paymentRepository.save(payment).getId();
@@ -37,7 +35,7 @@ public class PaymentService {
     @Transactional(readOnly = true)
     public PaymentDto findById(Long userId, Long orderId, Long id) {
         Payment payment = paymentRepository.findByIdAndOrderIdAndOrderUserId(id, orderId, userId)
-                .orElseThrow(() -> new RuntimeException("Payment is not found"));
+                .orElseThrow(() -> new ApplicationException("Payment is not found", HttpStatus.NOT_FOUND));
         return paymentMapper.toDto(payment);
     }
 
@@ -51,7 +49,7 @@ public class PaymentService {
     @Transactional
     public void update(Long id, Long userId, Long orderId, PaymentStatus status) {
         Payment payment = paymentRepository.findByIdAndOrderIdAndOrderUserId(id, orderId, userId)
-                .orElseThrow(() -> new RuntimeException("Payment is not found"));
+                .orElseThrow(() -> new ApplicationException("Payment is not found", HttpStatus.NOT_FOUND));
         payment.setPaymentStatus(status);
         paymentRepository.save(payment);
     }
@@ -59,7 +57,7 @@ public class PaymentService {
     @Transactional
     public PaymentStatus pay(Long userId, Long orderId, Long id) {
         Payment payment = paymentRepository.findByIdAndOrderIdAndOrderUserId(id, orderId, userId)
-                .orElseThrow(() -> new RuntimeException("Payment is not found"));
+                .orElseThrow(() -> new ApplicationException("Payment is not found", HttpStatus.NOT_FOUND));
         if (payment.getPaymentStatus() == PaymentStatus.SUCCESSFUL) {
             throw new ApplicationException("Order is already paid", HttpStatus.CONFLICT);
         }
@@ -73,20 +71,15 @@ public class PaymentService {
     }
 
     @Transactional
-    public void timeOutInProcessPayments() {
-        LocalDateTime thresholdTime = LocalDateTime.now().minus(10, ChronoUnit.MINUTES);
-        List<Payment> expiredPayments = paymentRepository.findByPaymentStatusAndCreatedAtBefore(PaymentStatus.IN_PROCESS, thresholdTime);
-
-        for (Payment payment : expiredPayments) {
-            payment.setPaymentStatus(PaymentStatus.TIMED_OUT);
-            paymentRepository.save(payment);
-        }
+    public void timeOutInProcessPayments(Long minutes) {
+        LocalDateTime date = LocalDateTime.now().minusMinutes(minutes);
+        paymentRepository.updateExpiredPayments(date);
     }
 
     @Transactional
     public void delete(Long userId, Long orderId, Long id) {
         Payment payment = paymentRepository.findByIdAndOrderIdAndOrderUserId(id, orderId, userId)
-                .orElseThrow(() -> new RuntimeException("Payment is not found"));
+                .orElseThrow(() -> new ApplicationException("Payment is not found", HttpStatus.NOT_FOUND));
         paymentRepository.delete(payment);
     }
 }

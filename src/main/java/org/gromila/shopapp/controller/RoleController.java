@@ -33,6 +33,11 @@ public class RoleController {
         roleService.addAuthority(id, authorityId);
     }
 
+    @PutMapping("/{id}")
+    public void update(@PathVariable Long id, @RequestBody String newName) {
+        roleService.update(id, newName);
+    }
+
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         roleService.delete(id);

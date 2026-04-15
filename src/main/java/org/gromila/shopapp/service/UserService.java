@@ -1,13 +1,15 @@
 package org.gromila.shopapp.service;
 
 import lombok.RequiredArgsConstructor;
-import org.gromila.shopapp.dto.UserCreateDto;
+import org.gromila.shopapp.dto.UserCreateUpdateDto;
 import org.gromila.shopapp.dto.UserDto;
 import org.gromila.shopapp.entity.Role;
 import org.gromila.shopapp.entity.User;
+import org.gromila.shopapp.exception.ApplicationException;
 import org.gromila.shopapp.mapper.UserMapper;
 import org.gromila.shopapp.repository.RoleRepository;
 import org.gromila.shopapp.repository.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +22,8 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
 
-    public Long create(UserCreateDto createdUser) {
+    @Transactional
+    public Long create(UserCreateUpdateDto createdUser) {
         User user = userMapper.toEntity(createdUser);
         return userRepository.save(user).getId();
     }
@@ -28,19 +31,21 @@ public class UserService {
     @Transactional
     public void addRole(Long userId, Long roleId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ApplicationException("User not found", HttpStatus.NOT_FOUND));
         Role role = roleRepository.findById(roleId)
-                .orElseThrow(() -> new RuntimeException("Role not found"));
+                .orElseThrow(() -> new ApplicationException("Role not found", HttpStatus.NOT_FOUND));
         user.getRoles().add(role);
         userRepository.save(user);
     }
 
+    @Transactional(readOnly = true)
     public UserDto findById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ApplicationException("User not found", HttpStatus.NOT_FOUND));
         return userMapper.toDto(user);
     }
 
+    @Transactional(readOnly = true)
     public List<UserDto> findAll() {
         List<User> users = userRepository.findAll();
         return users.stream()
@@ -49,18 +54,21 @@ public class UserService {
     }
 
     @Transactional
-    public UserDto update(Long id, String name, String surname, String login, String password) {
+    public UserDto update(Long id, UserCreateUpdateDto userCreateUpdateDto) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        user.setName(name);
-        user.setSurname(surname);
-        user.setLogin(login);
-        user.setPassword(password);
+                .orElseThrow(() -> new ApplicationException("User not found", HttpStatus.NOT_FOUND));
+        user.setName(userCreateUpdateDto.getName());
+        user.setSurname(userCreateUpdateDto.getSurname());
+        user.setLogin(userCreateUpdateDto.getLogin());
+        user.setPassword(userCreateUpdateDto.getPassword());
         User updatedUser = userRepository.save(user);
         return userMapper.toDto(updatedUser);
     }
 
+    @Transactional
     public void delete(Long id) {
-        userRepository.deleteById(id);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ApplicationException("User not found", HttpStatus.NOT_FOUND));
+        userRepository.delete(user);
     }
 }

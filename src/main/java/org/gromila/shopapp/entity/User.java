@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -32,6 +33,7 @@ public class User {
     private String password;
 
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @OneToMany(
             mappedBy = "user",
             fetch = FetchType.LAZY,
@@ -41,6 +43,7 @@ public class User {
     private Set<Order> orders = new HashSet<>();
 
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToMany
     @JoinTable(
             name = "users_roles_links",
@@ -48,13 +51,6 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
-
-    public User(String name, String surname, String login, String password) {
-        this.name = name;
-        this.surname = surname;
-        this.login = login;
-        this.password = password;
-    }
 
     public User(Long id) {
         this.id = id;

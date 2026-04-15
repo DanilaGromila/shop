@@ -1,7 +1,8 @@
 package org.gromila.shopapp.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.gromila.shopapp.dto.UserCreateDto;
+import org.gromila.shopapp.dto.UserCreateUpdateDto;
 import org.gromila.shopapp.dto.UserDto;
 import org.gromila.shopapp.service.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public Long create(@RequestBody UserCreateDto userCreateDto) {
+    public Long create(@Valid @RequestBody UserCreateUpdateDto userCreateDto) {
         return userService.create(userCreateDto);
     }
 
@@ -30,12 +31,13 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public UserDto update(@PathVariable Long id,
-                          @RequestParam String name,
-                          @RequestParam String surname,
-                          @RequestParam String login,
-                          @RequestParam String password) {
-        return userService.update(id, name, surname, login, password);
+    public UserDto update(@PathVariable Long id, @Valid @RequestBody UserCreateUpdateDto userCreateDto) {
+        return userService.update(id, userCreateDto);
+    }
+
+    @PostMapping("/{userId}/roles/{roleId}")
+    public void addRole(@PathVariable Long userId, @PathVariable Long roleId) {
+        userService.addRole(userId, roleId);
     }
 
     @DeleteMapping("/{id}")

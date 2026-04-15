@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.gromila.shopapp.dto.OrderDto;
 import org.gromila.shopapp.entity.Order;
 import org.gromila.shopapp.entity.User;
+import org.gromila.shopapp.exception.ApplicationException;
 import org.gromila.shopapp.mapper.OrderMapper;
 import org.gromila.shopapp.repository.OrderRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,12 +28,14 @@ public class OrderService {
         return orderRepository.save(order).getId();
     }
 
+    @Transactional(readOnly = true)
     public OrderDto findById(Long userId, Long id) {
         Order order = orderRepository.findByIdAndUserId(id, userId)
-                .orElseThrow(() -> new RuntimeException("Order no found"));
+                .orElseThrow(() -> new ApplicationException("Order not found", HttpStatus.NOT_FOUND));
         return orderMapper.toDto(order);
     }
 
+    @Transactional(readOnly = true)
     public List<OrderDto> findAll(Long userId) {
         List<Order> orders = orderRepository.findAllByUserId(userId);
         return orders.stream().map(orderMapper::toDto).toList();
@@ -40,7 +44,7 @@ public class OrderService {
     @Transactional
     public void delete(Long userId, Long id) {
         Order order = orderRepository.findByIdAndUserId(id, userId)
-                .orElseThrow(() -> new RuntimeException("Order no found"));
+                .orElseThrow(() -> new ApplicationException("Order not found", HttpStatus.NOT_FOUND));
         orderRepository.delete(order);
     }
 }

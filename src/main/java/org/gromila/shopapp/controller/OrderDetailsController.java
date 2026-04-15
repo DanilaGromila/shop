@@ -1,5 +1,6 @@
 package org.gromila.shopapp.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.gromila.shopapp.dto.OrderDetailsCreateDto;
 import org.gromila.shopapp.dto.OrderDetailsDto;
@@ -15,7 +16,7 @@ public class OrderDetailsController {
     private final OrderDetailsService orderDetailsService;
 
     @PostMapping
-    public Long create(@PathVariable Long userId,
+    public Long create(@Valid @PathVariable Long userId,
                        @PathVariable Long orderId,
                        @RequestBody OrderDetailsCreateDto orderDetailsCreateDto) {
         return orderDetailsService.create(userId, orderId, orderDetailsCreateDto);

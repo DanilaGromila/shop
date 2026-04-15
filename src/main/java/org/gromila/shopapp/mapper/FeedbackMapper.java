@@ -6,8 +6,7 @@ import org.gromila.shopapp.entity.Feedback;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, unmappedSourcePolicy = ReportingPolicy.IGNORE,
-        componentModel = "spring")
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
 public interface FeedbackMapper {
 
     FeedbackDto toDto(Feedback feedback);

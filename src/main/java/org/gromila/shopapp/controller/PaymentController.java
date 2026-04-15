@@ -1,7 +1,6 @@
 package org.gromila.shopapp.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.gromila.shopapp.dto.PaymentCreateDto;
 import org.gromila.shopapp.dto.PaymentDto;
 import org.gromila.shopapp.entity.PaymentStatus;
 import org.gromila.shopapp.service.PaymentService;
@@ -17,9 +16,8 @@ public class PaymentController {
 
     @PostMapping
     public Long create(@PathVariable Long userId,
-                       @PathVariable Long orderId,
-                       @RequestBody PaymentCreateDto paymentCreateDto) {
-        return paymentService.create(userId, orderId, paymentCreateDto);
+                       @PathVariable Long orderId) {
+        return paymentService.create(userId, orderId);
     }
 
     @GetMapping("/{id}")

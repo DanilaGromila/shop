@@ -6,16 +6,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(uses = AuthorityMapper.class, unmappedTargetPolicy = ReportingPolicy.IGNORE, unmappedSourcePolicy = ReportingPolicy.IGNORE,
-        componentModel = "spring")
+@Mapper(uses = AuthorityMapper.class, unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
 public interface RoleMapper {
 
-    @Mapping(source = "authorities", target = "authorities")
     RoleDto toDto(Role role);
-
-    default String mapRolesToNames(Role role) {
-        if (role == null) return null;
-        return role.getName();
-    }
 }
 

@@ -1,5 +1,6 @@
 package org.gromila.shopapp.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.gromila.shopapp.dto.FeedbackCreateDto;
 import org.gromila.shopapp.dto.FeedbackDto;
@@ -15,7 +16,7 @@ public class FeedbackController {
     private final FeedbackService feedbackService;
 
     @PostMapping
-    public Long create(@PathVariable Long itemId,
+    public Long create(@Valid @PathVariable Long itemId,
                        @RequestBody FeedbackCreateDto feedbackCreateDto) {
         return feedbackService.create(itemId, feedbackCreateDto);
     }

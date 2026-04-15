@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -12,6 +13,6 @@ import java.util.List;
 public class ItemDto {
     private Long id;
     private String name;
-    private Double rating;
+    private BigDecimal rating;
     private List<FeedbackDto> feedbacks;
 }
