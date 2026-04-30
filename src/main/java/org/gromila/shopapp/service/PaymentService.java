@@ -1,6 +1,9 @@
 package org.gromila.shopapp.service;
 
 import lombok.RequiredArgsConstructor;
+import org.gromila.shopapp.annotation.CacheEvict;
+import org.gromila.shopapp.annotation.CachePut;
+import org.gromila.shopapp.annotation.Cached;
 import org.gromila.shopapp.dto.PaymentDto;
 import org.gromila.shopapp.entity.Order;
 import org.gromila.shopapp.entity.Payment;
@@ -33,6 +36,7 @@ public class PaymentService {
     }
 
     @Transactional(readOnly = true)
+    @Cached(prefix = "payments", key = "#id")
     public PaymentDto findById(Long userId, Long orderId, Long id) {
         Payment payment = paymentRepository.findByIdAndOrderIdAndOrderUserId(id, orderId, userId)
                 .orElseThrow(() -> new ApplicationException("Payment is not found", HttpStatus.NOT_FOUND));
@@ -47,6 +51,7 @@ public class PaymentService {
     }
 
     @Transactional
+    @CachePut(prefix = "payments", key = "#id")
     public void update(Long id, Long userId, Long orderId, PaymentStatus status) {
         Payment payment = paymentRepository.findByIdAndOrderIdAndOrderUserId(id, orderId, userId)
                 .orElseThrow(() -> new ApplicationException("Payment is not found", HttpStatus.NOT_FOUND));
@@ -77,6 +82,7 @@ public class PaymentService {
     }
 
     @Transactional
+    @CacheEvict(prefix = "payments", key = "#id")
     public void delete(Long userId, Long orderId, Long id) {
         Payment payment = paymentRepository.findByIdAndOrderIdAndOrderUserId(id, orderId, userId)
                 .orElseThrow(() -> new ApplicationException("Payment is not found", HttpStatus.NOT_FOUND));

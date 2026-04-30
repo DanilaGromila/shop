@@ -1,6 +1,9 @@
 package org.gromila.shopapp.service;
 
 import lombok.RequiredArgsConstructor;
+import org.gromila.shopapp.annotation.CacheEvict;
+import org.gromila.shopapp.annotation.CachePut;
+import org.gromila.shopapp.annotation.Cached;
 import org.gromila.shopapp.dto.UserCreateUpdateDto;
 import org.gromila.shopapp.dto.UserDto;
 import org.gromila.shopapp.entity.Role;
@@ -39,6 +42,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    @Cached(prefix = "users", key = "#id")
     public UserDto findById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ApplicationException("User not found", HttpStatus.NOT_FOUND));
@@ -54,6 +58,7 @@ public class UserService {
     }
 
     @Transactional
+    @CachePut(prefix = "users", key = "#id")
     public UserDto update(Long id, UserCreateUpdateDto userCreateUpdateDto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ApplicationException("User not found", HttpStatus.NOT_FOUND));
@@ -66,6 +71,7 @@ public class UserService {
     }
 
     @Transactional
+    @CacheEvict(prefix = "users", key = "#id")
     public void delete(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ApplicationException("User not found", HttpStatus.NOT_FOUND));

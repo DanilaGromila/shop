@@ -1,6 +1,8 @@
 package org.gromila.shopapp.service;
 
 import lombok.RequiredArgsConstructor;
+import org.gromila.shopapp.annotation.CacheEvict;
+import org.gromila.shopapp.annotation.Cached;
 import org.gromila.shopapp.dto.OrderDto;
 import org.gromila.shopapp.entity.Order;
 import org.gromila.shopapp.entity.User;
@@ -29,6 +31,7 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
+    @Cached(prefix = "orders", key = "#id")
     public OrderDto findById(Long userId, Long id) {
         Order order = orderRepository.findByIdAndUserId(id, userId)
                 .orElseThrow(() -> new ApplicationException("Order not found", HttpStatus.NOT_FOUND));
@@ -42,6 +45,7 @@ public class OrderService {
     }
 
     @Transactional
+    @CacheEvict(prefix = "orders", key = "#id")
     public void delete(Long userId, Long id) {
         Order order = orderRepository.findByIdAndUserId(id, userId)
                 .orElseThrow(() -> new ApplicationException("Order not found", HttpStatus.NOT_FOUND));

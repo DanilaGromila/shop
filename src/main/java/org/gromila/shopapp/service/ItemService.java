@@ -1,6 +1,9 @@
 package org.gromila.shopapp.service;
 
 import lombok.RequiredArgsConstructor;
+import org.gromila.shopapp.annotation.CacheEvict;
+import org.gromila.shopapp.annotation.CachePut;
+import org.gromila.shopapp.annotation.Cached;
 import org.gromila.shopapp.dto.ItemCreateUpdateDto;
 import org.gromila.shopapp.dto.ItemDto;
 import org.gromila.shopapp.entity.Item;
@@ -28,6 +31,7 @@ public class ItemService {
     }
 
     @Transactional(readOnly = true)
+    @Cached(prefix = "items", key = "#id")
     public ItemDto findById(Long id) {
         Item item = itemRepository.findById(id)
                 .orElseThrow(() -> new ApplicationException("Item not found", HttpStatus.NOT_FOUND));
@@ -41,6 +45,7 @@ public class ItemService {
     }
 
     @Transactional
+    @CachePut(prefix = "items", key = "#id")
     public void update(Long id, ItemCreateUpdateDto itemUpdateDto) {
         Item item = itemRepository.findById(id)
                 .orElseThrow(() -> new ApplicationException("Item not found", HttpStatus.NOT_FOUND));
@@ -49,6 +54,7 @@ public class ItemService {
     }
 
     @Transactional
+    @CachePut(prefix = "items", key = "#id")
     public void updateItemRating(Long id) {
         Item item = itemRepository.findById(id)
                 .orElseThrow(() -> new ApplicationException("Item not found", HttpStatus.NOT_FOUND));
@@ -64,6 +70,7 @@ public class ItemService {
     }
 
     @Transactional
+    @CacheEvict(prefix = "items", key = "#id")
     public void delete(Long id) {
         Item item = itemRepository.findById(id)
                 .orElseThrow(() -> new ApplicationException("Item not found", HttpStatus.NOT_FOUND));

@@ -1,6 +1,9 @@
 package org.gromila.shopapp.service;
 
 import lombok.RequiredArgsConstructor;
+import org.gromila.shopapp.annotation.CacheEvict;
+import org.gromila.shopapp.annotation.CachePut;
+import org.gromila.shopapp.annotation.Cached;
 import org.gromila.shopapp.dto.RoleDto;
 import org.gromila.shopapp.entity.Authority;
 import org.gromila.shopapp.entity.Role;
@@ -29,6 +32,7 @@ public class RoleService {
     }
 
     @Transactional(readOnly = true)
+    @Cached(prefix = "roles", key = "#id")
     public RoleDto findById(Long id) {
         Role role = roleRepository.findById(id).
                 orElseThrow(() -> new ApplicationException("Role not found", HttpStatus.NOT_FOUND));
@@ -52,6 +56,7 @@ public class RoleService {
     }
 
     @Transactional
+    @CachePut(prefix = "roles", key = "#id")
     public void update(Long id, String newName) {
         Role role = roleRepository.findById(id)
                 .orElseThrow(() -> new ApplicationException("Role not found", HttpStatus.NOT_FOUND));
@@ -60,6 +65,7 @@ public class RoleService {
     }
 
     @Transactional
+    @CacheEvict(prefix = "roles", key = "#id")
     public void delete(Long id) {
         Role role = roleRepository.findById(id)
                 .orElseThrow(() -> new ApplicationException("Role not found", HttpStatus.NOT_FOUND));
