@@ -12,18 +12,13 @@ services:
       timeout: 5s
       retries: 20
 
-  redis:
-    image: redis:latest
-    container_name: app-cache-redis
+  redis-test:
+    image: redis:6.2-alpine
     ports:
       - "6379:6379"
-    volumes:
-      - redis-data:/data
-    networks:
-      - redis-network
-
-volumes:
-  redis-data:
-
-networks:
-  redis-network:
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
