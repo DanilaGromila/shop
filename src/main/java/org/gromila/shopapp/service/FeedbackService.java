@@ -1,6 +1,8 @@
 package org.gromila.shopapp.service;
 
 import lombok.RequiredArgsConstructor;
+import org.gromila.shopapp.annotation.CacheEvict;
+import org.gromila.shopapp.annotation.Cached;
 import org.gromila.shopapp.dto.FeedbackCreateDto;
 import org.gromila.shopapp.dto.FeedbackDto;
 import org.gromila.shopapp.entity.Feedback;
@@ -32,6 +34,7 @@ public class FeedbackService {
     }
 
     @Transactional(readOnly = true)
+    @Cached(prefix = "feedbacks", key = "#id")
     public FeedbackDto findById(Long itemId, Long id) {
         Feedback feedback = feedbackRepository.findByIdAndItemId(id, itemId).
                 orElseThrow(() -> new ApplicationException("Feedback not found", HttpStatus.NOT_FOUND));
@@ -45,6 +48,7 @@ public class FeedbackService {
     }
 
     @Transactional
+    @CacheEvict(prefix = "feedbacks", key = "#id")
     public void delete(Long itemId, Long id) {
         Feedback feedback = feedbackRepository.findByIdAndItemId(id, itemId).
                 orElseThrow(() -> new ApplicationException("Feedback not found", HttpStatus.NOT_FOUND));

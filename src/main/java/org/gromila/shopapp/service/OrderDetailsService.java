@@ -1,6 +1,8 @@
 package org.gromila.shopapp.service;
 
 import lombok.RequiredArgsConstructor;
+import org.gromila.shopapp.annotation.CacheEvict;
+import org.gromila.shopapp.annotation.Cached;
 import org.gromila.shopapp.dto.OrderDetailsCreateDto;
 import org.gromila.shopapp.dto.OrderDetailsDto;
 import org.gromila.shopapp.entity.Order;
@@ -30,6 +32,7 @@ public class OrderDetailsService {
     }
 
     @Transactional(readOnly = true)
+    @Cached(prefix = "order_details", key = "#id")
     public OrderDetailsDto findById(Long userId, Long orderId, Long id) {
         OrderDetails orderDetails = orderDetailsRepository.findByIdAndOrderIdAndOrderUserId(id, orderId, userId)
                 .orElseThrow(() -> new ApplicationException("Details not found", HttpStatus.NOT_FOUND));
@@ -43,6 +46,7 @@ public class OrderDetailsService {
     }
 
     @Transactional
+    @CacheEvict(prefix = "order_details", key = "#id")
     public void delete(Long userId, Long orderId, Long id) {
         OrderDetails orderDetails = orderDetailsRepository.findByIdAndOrderIdAndOrderUserId(id, orderId, userId)
                 .orElseThrow(() -> new ApplicationException("Details not found", HttpStatus.NOT_FOUND));

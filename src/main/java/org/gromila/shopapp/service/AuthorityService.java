@@ -1,6 +1,8 @@
 package org.gromila.shopapp.service;
 
 import lombok.RequiredArgsConstructor;
+import org.gromila.shopapp.annotation.CacheEvict;
+import org.gromila.shopapp.annotation.Cached;
 import org.gromila.shopapp.dto.AuthorityDto;
 import org.gromila.shopapp.entity.Authority;
 import org.gromila.shopapp.exception.ApplicationException;
@@ -26,6 +28,7 @@ public class AuthorityService {
     }
 
     @Transactional(readOnly = true)
+    @Cached(prefix = "authorities", key = "#id")
     public AuthorityDto findById(Long id) {
         Authority authority = authorityRepository.findById(id)
                 .orElseThrow(() -> new ApplicationException("Authority not found", HttpStatus.NOT_FOUND));
@@ -39,6 +42,7 @@ public class AuthorityService {
     }
 
     @Transactional
+    @CacheEvict(prefix = "authorities", key = "#id")
     public void delete(Long id) {
         Authority authority = authorityRepository.findById(id)
                 .orElseThrow(() -> new ApplicationException("Authority not found", HttpStatus.NOT_FOUND));
